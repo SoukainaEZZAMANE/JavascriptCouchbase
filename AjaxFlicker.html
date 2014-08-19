@@ -1,0 +1,146 @@
+
+<html>
+<title>Yarbi tkhdam</title>
+            <script language="javascript" type="text/javascript">
+            var request = null;
+
+           /* function createRequest() {
+                    try {
+                        request = new XMLHttpRequest();
+                        } catch (trymicrosoft) {
+                    try {
+                    request = new ActiveXObject("MsXML2.XMLHTTP");
+                    } catch (othermicrosoft) {
+                    try {
+                         request = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (failed) {
+                    request = null;
+                    }
+                    }
+                    }
+
+                    if (request == null)
+                    alert("Error creating request object!");
+                    }*/
+
+            function getMessage()
+                    {
+                    //createRequest();
+                    
+                    var playerid = document.getElementById("playerid").value;
+                    id=eval(playerid);
+                    var url = "http://localhost:8080/projet/etudiant/"+id;
+                    var request = createCORSRequest("get", url);
+                    request.onreadystatechange = handleResponse;
+                    //request.open("GET", url, true);
+                    request.send(null);
+                    }
+
+            
+            function handleResponse() {
+                if (request.readyState==4 && request.status==200)
+                { 
+                    var det=eval("("+request.responseText+")");
+                    document.getElementById('lastname').value=det.prenom;
+                    document.getElementById('firstname').value=det.nom;
+                    document.getElementById('jerseynumber').value=det.id;
+
+                }
+            }
+            function createCORSRequest(method, url){
+                    var xhr = new XMLHttpRequest();
+                    if ("withCredentials" in xhr){
+                        xhr.open(method, url, true);
+                    } else if (typeof XDomainRequest != "undefined"){
+                        xhr = new XDomainRequest();
+                        xhr.open(method, url);
+                    } else {
+                        xhr = null;
+                    }
+                    return xhr;
+            }
+
+           /* var request = createCORSRequest("get", "http://www.nczonline.net/");
+                if (request){
+                    request.onload = function(){
+                        //do something with request.responseText
+                    };
+                    request.send();
+            }*/
+
+
+                            // Create the XHR object.
+                function createCORSRequest(method, url) {
+                  var xhr = new XMLHttpRequest();
+                  if ("withCredentials" in xhr) {
+                    // XHR for Chrome/Firefox/Opera/Safari.
+                    xhr.open(method, url, true);
+                  } else if (typeof XDomainRequest != "undefined") {
+                    // XDomainRequest for IE.
+                    xhr = new XDomainRequest();
+                    xhr.open(method, url);
+                  } else {
+                    // CORS not supported.
+                    xhr = null;
+                  }
+                  return xhr;
+                }
+
+                // Helper method to parse the title tag from the response.
+              /*  function getTitle(text) {
+                  return text.match('<title>(.*)?</title>')[1];
+                }*/
+
+                // Make the actual CORS request.
+                function makeCorsRequest() {
+                  // All HTML5 Rocks properties support CORS.
+                  var url = 'http://updates.html5rocks.com';
+
+                  var xhr = createCORSRequest('GET', url);
+                  if (!xhr) {
+                    alert('CORS not supported');
+                    return;
+                  }
+
+                  // Response handlers.
+                  xhr.onload = function() {
+                    var text = xhr.responseText;
+                    var title = getTitle(text);
+                    alert('Response from CORS request to ' + url + ': ' + title);
+                  };
+
+                  xhr.onerror = function() {
+                    alert('Woops, there was an error making the request.');
+                  };
+
+                  xhr.send();
+                }
+            </script>
+<body>
+<table>
+<tr>
+<td>Enter Student ID : </td>
+<td><input type="text" id="playerid" size="10"/>
+
+<input type="button" value="Get Details" onclick="getMessage()"/>
+</tr>
+<tr>
+<td>Player Last Name : </td>
+<td> <input type="text" id="lastname" size="10"/> </td>
+</tr>
+
+<tr>
+<td>Player First Name : </td>
+<td> <input type="text" id="firstname" size="10"/> </td>
+</tr>
+
+<tr>
+<td>Player Jersey Number : </td>
+<td> <input type="text" id="jerseynumber" size="10"/> </td>
+</tr>
+
+</table>
+
+
+</body>
+</html>
